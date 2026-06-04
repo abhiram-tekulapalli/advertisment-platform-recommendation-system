@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdSmart | AI Prediction System</title>
+
+    <style>
+        :root {
+            --primary: #1d4ed8;
+            --primary-dark: #1e3a8a;
+
+            --secondary: #22c55e;
+
+            --accent: #f97316;
+
+            --danger: #dc2626;
+
+            --purple: #6d28d9;
+
+
+            --bg-body: #f1f5f9;
+
+            --bg-card: #ffffff;
+            --text-main: #020617;
+
+            --text-muted: #475569;
+
+            --border-radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+            --nav-height: 70px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            height: var(--nav-height);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            height: 100%;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.5rem 0;
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            bottom: -2px;
+            left: 0;
+            background: var(--primary);
+            transition: var(--transition);
+            border-radius: 2px;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+
+        .main-content {
+            flex: 1;
+            position: relative;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .view-section {
+            display: none;
+            animation: fadeInSlideUp 0.6s ease-out forwards;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        @keyframes fadeInSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            padding: 3rem;
+            max-width: 850px;
+            margin: 0 auto;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .hero-text {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero-text h1 {
+            font-size: 2.5rem;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-text p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-left: 4px;
+        }
+
+        input,
+        select {
+            padding: 0.875rem;
+            border: 2px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            background-color: #f8fafc;
+            transition: var(--transition);
+            width: 100%;
+            color: var(--text-main);
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background-color: #fff;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn-primary {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            padding: 1.25rem;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            transition: var(--transition);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+
+        #result-container {
+            margin-top: 2.5rem;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            display: none;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: var(--transition);
+        }
+
+        #result-container.show {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .result-success {
+            background: linear-gradient(to bottom right, #ecfdf5, #d1fae5);
+            border: 1px solid #10b981;
+            color: #064e3b;
+        }
+
+        .result-error {
+            background: linear-gradient(to bottom right, #fef2f2, #fee2e2);
+            border: 1px solid #ef4444;
+            color: #991b1b;
+        }
+
+        .result-heading {
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+            opacity: 0.8;
+        }
+
+        .result-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            line-height: 1.2;
+        }
+
+
+        .content-block {
+            background: white;
+            padding: 3rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .section-title {
+            color: var(--text-main);
+            font-size: 1.75rem;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            display: block;
+            width: 6px;
+            height: 30px;
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .profile-card {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+            transition: var(--transition);
+            opacity: 0;
+            animation: popIn 0.6s ease-out forwards;
+        }
+
+
+        .profile-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .profile-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .profile-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .profile-card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            border: 4px solid #f8fafc;
+            box-shadow: var(--shadow);
+            background: #f1f5f9;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 0.35rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .role-student {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .role-supervisor {
+            background-color: #fce7f3;
+            color: #9d174d;
+        }
+
+        .role-cosupervisor {
+            background-color: #f3e8ff;
+            color: #6b21a8;
+        }
+
+
+        .workflow-container {
+            position: relative;
+            padding-left: 20px;
+            margin-top: 2rem;
+        }
+
+        .workflow-item {
+            position: relative;
+            padding-bottom: 2rem;
+            padding-left: 2rem;
+            border-left: 2px solid #e2e8f0;
+            opacity: 0;
+            animation: popIn 0.5s ease-out forwards;
+        }
+
+
+        .workflow-item:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .workflow-item:nth-child(2) {
+            animation-delay: 0.15s;
+        }
+
+        .workflow-item:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .workflow-item:nth-child(4) {
+            animation-delay: 0.25s;
+        }
+
+        .workflow-item:nth-child(5) {
+            animation-delay: 0.3s;
+        }
+
+        .workflow-item:nth-child(6) {
+            animation-delay: 0.35s;
+        }
+
+        .workflow-item:nth-child(7) {
+            animation-delay: 0.4s;
+        }
+
+        .workflow-item:nth-child(8) {
+            animation-delay: 0.45s;
+        }
+
+        .workflow-item:nth-child(9) {
+            animation-delay: 0.5s;
+        }
+
+        .workflow-item:nth-child(10) {
+            animation-delay: 0.55s;
+        }
+
+        .workflow-item:nth-child(11) {
+            animation-delay: 0.6s;
+        }
+
+        .workflow-item:nth-child(12) {
+            animation-delay: 0.65s;
+        }
+
+        .workflow-item:last-child {
+            border-left: none;
+        }
+
+        .workflow-item::before {
+            content: '';
+            position: absolute;
+            left: -9px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 4px solid white;
+            box-shadow: 0 0 0 2px var(--primary);
+            transition: var(--transition);
+        }
+
+        .workflow-item:hover::before {
+            background: var(--accent);
+            box-shadow: 0 0 0 2px var(--accent);
+            transform: scale(1.2);
+        }
+
+        .workflow-title {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .workflow-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 8px;
+            display: block;
+            border: 1px solid #f1f5f9;
+        }
+
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .tech-badge {
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .tech-badge:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .tech-icon {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+        }
+
+
+        .loader {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-bottom-color: white;
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+
+        @keyframes rotation {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo" onclick="app.router('index')">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 12h5" />
+                    <path d="M17 12h5" />
+                    <path d="M7 12a5 5 0 0 1 5-5" />
+                    <path d="M12 7a5 5 0 0 1 5 5" />
+                    <path d="M12 17a5 5 0 0 0 5-5" />
+                    <path d="M7 12a5 5 0 0 0 5 5" />
+                </svg>
+                MINOR PROJECT
+            </a>
+            <ul class="nav-menu">
+                <li><a href="#" class="nav-link active" onclick="app.router('index')" data-target="index">Home</a></li>
+                <li><a href="#" class="nav-link" onclick="app.router('about')" data-target="about">About Us</a></li>
+                <li><a href="#" class="nav-link" onclick="app.router('project')" data-target="project">Project
+                        Details</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+
+
+        <section id="view-index" class="view-section active">
+            <div class="card" style="animation: float 6s ease-in-out infinite;">
+                <div class="hero-text">
+                    <h1>ADVERTISING PLATFORM RECOMMENDATION</h1>
+                    <p>Use Machine Learning to choose the smartest advertising strategy for your product
+                        Enter your details below and get instant, data-driven recommendations.</p>
+                </div>
+
+                <form id="predictForm" onsubmit="app.handlePredict(event)">
+                    <div class="form-grid">
+
+                        <div class="input-group">
+                            <label for="product_category">Product Category</label>
+                            <select id="product_category" name="product_category" required>
+                                <option value="" disabled selected>Select Category</option>
+                                <option value="Clothing">Clothing</option>
+                                <option value="Footwear">Footwear</option>
+                                <option value="Skin Care">Skin Care</option>
+                                <option value="Electronics">Electronics</option>
+                                <option value="Education">Education</option>
+                                <option value="Wellness">Wellness</option>
+                                <option value="Appliances">Appliances</option>
+                                <option value="Furniture">Furniture</option>
+                                <option value="Sports">Sports</option>
+                                <option value="Toys">Toys</option>
+                                <option value="Apps and Websites">Apps and Websites</option>
+                                <option value="Entertainment">Entertainment</option>
+                            </select>
+                        </div>
+
+
+                        <div class="input-group">
+                            <label for="target_geography">Target Geography</label>
+                            <select id="target_geography" name="target_geography" required>
+                                <option value="" disabled selected>Select Region</option>
+                                <option value="Local">Local</option>
+                                <option value="Regional">Regional</option>
+                                <option value="Nationwide">Nationwide</option>
+                                <option value="International">International</option>
+                            </select>
+                        </div>
+
+
+                        <div class="input-group">
+                            <label for="brand_awareness">Brand Awareness</label>
+                            <select id="brand_awareness" name="brand_awareness" required>
+                                <option value="" disabled selected>Select Level</option>
+                                <option value="New">New</option>
+                                <option value="Moderately Known">Moderately Known</option>
+                                <option value="Well Known">Well Known</option>
+                            </select>
+                        </div>
+
+
+                        <div class="input-group">
+                            <label for="age">Target Audience Age</label>
+                            <input type="number" id="age" name="age" min="18" max="60" placeholder="e.g., 25" required>
+                            <small style="color:var(--text-muted); font-size:0.75rem;">Range: 18 - 60</small>
+                        </div>
+
+
+                        <div class="input-group">
+                            <label for="price">Product Price (₹)</label>
+                            <input type="number" id="price" name="price" min="1" max="99999" step="0.01"
+                                placeholder="e.g., 49.99" required>
+                            <small style="color:var(--text-muted); font-size:0.75rem;">Range: 1 - 99,999</small>
+                        </div>
+
+
+                        <div class="input-group">
+                            <label for="budget">Ad Budget (₹)</label>
+                            <input type="number" id="budget" name="budget" min="100" max="999999"
+                                placeholder="e.g., 1000" required>
+                            <small style="color:var(--text-muted); font-size:0.75rem;">Range: 100 - 999,999</small>
+                        </div>
+
+
+                        <button type="submit" id="submitBtn" class="btn-primary">
+                            <span>Get Recommendation</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+
+
+                <div id="result-container">
+                    <div class="result-heading">Recommended Platform</div>
+                    <div id="result-value" class="result-value">--</div>
+                    <div id="result-message" style="margin-top:0.5rem; font-size: 1rem; color: var(--text-muted);">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="view-about" class="view-section">
+            <div class="content-block">
+                <h2 class="section-title">Project Team</h2>
+                <p>We are a team of students working under expert supervision to solve real-world
+                    digital marketing challenges using Machine Learning</p>
+
+                <h3 style="margin-top: 2rem; font-size: 1.25rem; color: var(--text-main); font-weight: 700;">Faculty
+                    Supervision</h3>
+                <div class="team-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+
+                    <div class="profile-card">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Robert&backgroundColor=b6e3f4"
+                            alt="Supervisor" class="profile-img">
+                        <br>
+                        <span class="role-badge role-supervisor">Supervisor</span>
+                        <h3>Ms.T.Ashwini</h3>
+                        <p style="margin-top:0.5rem; font-size:0.95rem; color:var(--text-muted);">Professor, Dept. of CS
+                        </p>
+                        <p style="font-size:0.85rem; color:var(--text-muted); margin-top:0.5rem;">Expertise in Machine
+                            Learning</p>
+                    </div>
+
+                    <div class="profile-card">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Emily&backgroundColor=c0aede"
+                            alt="Co-Supervisor" class="profile-img">
+                        <br>
+                        <span class="role-badge role-cosupervisor">Co-Supervisor</span>
+                        <h3>Mrs.B.Lavanya</h3>
+                        <p style="margin-top:0.5rem; font-size:0.95rem; color:var(--text-muted);">Assistant Professor
+                        </p>
+                        <p style="font-size:0.85rem; color:var(--text-muted); margin-top:0.5rem;">Expertise in Data
+                            Analytics</p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 3rem; font-size: 1.25rem; color: var(--text-main); font-weight: 700;">Student
+                    Development Team</h3>
+                <div class="team-grid">
+
+                    <div class="profile-card">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Alex&backgroundColor=ffdfbf"
+                            alt="Student" class="profile-img">
+                        <br>
+                        <span class="role-badge role-student">Student</span>
+                        <h3>T Abhiram</h3>
+                        <p style="color:var(--primary); font-size:0.9rem; font-weight: 500;">Lead Developer</p>
+                    </div>
+
+                    <div class="profile-card">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah&backgroundColor=ffdfbf"
+                            alt="Student" class="profile-img">
+                        <br>
+                        <span class="role-badge role-student">Student</span>
+                        <h3>P Hansika</h3>
+                        <p style="color:var(--primary); font-size:0.9rem; font-weight: 500;">ML Engineer</p>
+                    </div>
+
+                    <div class="profile-card">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Michael&backgroundColor=ffdfbf"
+                            alt="Student" class="profile-img">
+                        <br>
+                        <span class="role-badge role-student">Student</span>
+                        <h3>S Hari Krishna</h3>
+                        <p style="color:var(--primary); font-size:0.9rem; font-weight: 500;">Data Analyst</p>
+                    </div>
+
+                    <div class="profile-card">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Priya&backgroundColor=ffdfbf"
+                            alt="Student" class="profile-img">
+                        <br>
+                        <span class="role-badge role-student">Student</span>
+                        <h3>G HarshaVardhan Reddy</h3>
+                        <p style="color:var(--primary); font-size:0.9rem; font-weight: 500;">Frontend Developer</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="view-project" class="view-section">
+            <div class="content-block">
+                <h2 class="section-title">Project Overview</h2>
+
+
+                <div style="margin-bottom: 3rem;">
+                    <h3 style="font-size:1.2rem; margin-bottom:1rem; color:var(--text-main);">Technologies Used</h3>
+                    <div class="tech-stack">
+                        <div class="tech-badge">🐍 Python</div>
+                        <div class="tech-badge">🌶️ Flask</div>
+                        <div class="tech-badge">🤖 Scikit-Learn</div>
+                        <div class="tech-badge">🐼 Pandas</div>
+                        <div class="tech-badge">🔢 NumPy</div>
+                        <div class="tech-badge">🌐 HTML5</div>
+                        <div class="tech-badge">🎨 CSS3</div>
+                        <div class="tech-badge">⚡ JavaScript</div>
+                    </div>
+                </div>
+
+                <h3 style="font-size:1.2rem; margin-bottom:1.5rem; color:var(--text-main);">Development Lifecycle (12
+                    Stages)</h3>
+
+                <div class="workflow-container">
+
+                    <div class="workflow-item">
+                        <span class="workflow-title">1. Problem Definition</span>
+                        <span class="workflow-desc">Identified the need for ML-driven budget optimization in social
+                            media marketing campaigns.</span>
+                    </div>
+
+                    <div class="workflow-item">
+                        <span class="workflow-title">2. Requirement Analysis</span>
+                        <span class="workflow-desc">Defined core parameters (Age, Budget, Geography) and target
+                            platforms (Instagram, LinkedIn, etc.).</span>
+                    </div>
+
+                    <div class="workflow-item">
+                        <span class="workflow-title">3. Data Balancing</span>
+                        <span class="workflow-desc">Generated synthetic datasets using Python libraries (NumPy, Pandas)
+                            to simulate real-world advertising data.</span>
+                    </div>
+
+                    <div class="workflow-item">
+                        <span class="workflow-title">4. Data Cleaning</span>
+                        <span class="workflow-desc">Balancing the dataset using real life logics</span>
+                    </div>
+
+                    <div class="workflow-item">
+                        <span class="workflow-title">5. Exploratory Data Analysis (EDA)</span>
+                        <span class="workflow-desc">Visualized correlations between budget, audience demographics, and
+                            platform conversion rates.</span>
+                    </div>
+
+                    <div class="workflow-item">
+                        <span class="workflow-title">6. Feature Engineering</span>
+                        <span class="workflow-desc">Encoded categorical variables (One-Hot Encoding) and scaled
+                            numerical inputs for model compatibility.</span>
+                    </div>
+
+                    <div class="workflow-item">
+                        <span class="workflow-title">7. Model Selection</span>
+                        <span class="workflow-desc">Evaluated multiple algorithms (logistic regression) before selecting
+                            Random Forest for highest accuracy.</span>
+                    </div>
+
+                    <div class="workflow-item">
+                        <span class="workflow-title">8. Model Training</span>
+                        <span class="workflow-desc">Trained the classifier on 80% of the dataset and tuned
+                            hyperparameters for optimal performance.</span>
+                    </div>
+
+                    <div class="workflow-item">
+                        <span class="workflow-title">9. Model Evaluation</span>
+                        <span class="workflow-desc">Validated model using the testing set, achieving 94.8% accuracy and
+                            high F1-scores.</span>
+                    </div>
+
+                    <div class="workflow-item">
+                        <span class="workflow-title">10. Backend API Development</span>
+                        <span class="workflow-desc">Built a RESTful Flask API to expose the model as a usable web
+                            service.</span>
+                    </div>
+
+                    <div class="workflow-item">
+                        <span class="workflow-title">11. Frontend Interface Design</span>
+                        <span class="workflow-desc">Developed a responsive HTML/CSS/JS interface for real-time user
+                            interaction.</span>
+                    </div>
+
+                    <div class="workflow-item">
+                        <span class="workflow-title">12. System Integration & Testing</span>
+                        <span class="workflow-desc">Connected frontend to backend, performed integration testing, and
+                            finalized deployment structure.</span>
+                    </div>
+                </div>
+
+
+                <div
+                    style="background: #f1f5f9; padding: 2rem; border-radius: 12px; margin-top: 3rem; border: 1px solid #e2e8f0;">
+                    <h3 style="font-size:1.2rem; margin-bottom:1rem; color:var(--text-main);">Model Performance Metrics
+                    </h3>
+                    <ul
+                        style="list-style-type: none; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+                        <li
+                            style="display: flex; justify-content: space-between; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.75rem;">
+                            <span style="color:var(--text-muted); font-weight: 500;">Accuracy</span>
+                            <strong style="color:var(--primary); font-size: 1.1rem;">94.8%</strong>
+                        </li>
+                        <li
+                            style="display: flex; justify-content: space-between; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.75rem;">
+                            <span style="color:var(--text-muted); font-weight: 500;">Precision</span>
+                            <strong style="color:var(--primary); font-size: 1.1rem;">95%</strong>
+                        </li>
+                        <li
+                            style="display: flex; justify-content: space-between; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.75rem;">
+                            <span style="color:var(--text-muted); font-weight: 500;">Recall</span>
+                            <strong style="color:var(--primary); font-size: 1.1rem;">95%</strong>
+                        </li>
+                        <li
+                            style="display: flex; justify-content: space-between; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.75rem;">
+                            <span style="color:var(--text-muted); font-weight: 500;">F1-Score</span>
+                            <strong style="color:var(--primary); font-size: 1.1rem;">95%</strong>
+                        </li>
+                    </ul>
+                </div>
+
+
+                <div style="margin-top: 3rem;">
+                    <h3 style="font-size:1.2rem; margin-bottom:1rem; color:var(--text-main);">Future Scope</h3>
+                    <p style="color: var(--text-muted);">
+                    <pre>
+                        a.Integration of real-time advertising performance data for dynamic recommendations
+                        b.Inclusion of additional business factors such as seasonality and customer behavior trends.
+                        c.Enhancement of the system using advanced machine learning techniques for improved
+                        accuracy.
+                        d.Deployment as a full-scale web or mobile application for wider accessibility.
+                        e.Continuous model improvement through periodic retraining with new data.
+                    </pre>
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 advertisment platform recommendation. Created for Minor Project Submission.</p>
+    </footer>
+
+    <script src="js/script.js"></script>
