@@ -1,7 +1,7 @@
 # Platform-Based Advertisement Recommendation System
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/abhiram-tekulapalli/project_readme_assets/main/header.svg" alt="Platform-Based Advertisement Recommendation System" width="100%" />
+  <img src="assets/readme_assets/header.svg" alt="Platform-Based Advertisement Recommendation System" width="100%" />
 </p>
 
 <p align="center">
@@ -160,5 +160,5 @@ This project is licensed under the **MIT License** — see [LICENSE](LICENSE) fo
 ---
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/abhiram-tekulapalli/project_readme_assets/main/footer.svg" alt="Footer" width="100%" />
+  <img src="assets/readme_assets/footer.svg" alt="Footer" width="100%" />
 </p>
